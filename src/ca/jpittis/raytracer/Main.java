@@ -21,14 +21,16 @@ public class Main {
         camera.generateLines();
         Line[][] lines = camera.getLines();
 
-        Light light = new Light(new Vector(-200, 300, 100));
+        Light light = new Light(new Vector(200, 200, -800));
 
         ArrayList<Shape> shapes = new ArrayList<Shape>();
 
-        shapes.add(new Sphere(new Vector(-50, -50, 300), 50));
-        shapes.add(new Sphere(new Vector(0, 0, 400), 100));
-        shapes.add(new Sphere(new Vector(50, 50, 500), 150));
-        shapes.add(new Plane(new Vector(0, 0, 1000), new Vector(0, 0, 1)));
+        shapes.add(new Sphere(new Vector(0, 0, 500), 50));
+        shapes.add(new Plane(new Vector(0, 0, 600), new Vector(0, 0, 1)));
+        shapes.add(new Plane(new Vector(100, 0, 600), new Vector(1, 0, 1)));
+        shapes.add(new Plane(new Vector(-100, 0, 600), new Vector(1, 0, -1)));
+        shapes.add(new Plane(new Vector(0, 100, 600), new Vector(0, 1, 1)));
+        shapes.add(new Plane(new Vector(0, -100, 600), new Vector(0, 1, -1)));
 
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
@@ -58,28 +60,32 @@ public class Main {
                     Vector normal = closest.getNormalIntersection();
                     Vector lightVector = new Vector(closest.getIntersection());
                     lightVector.subtract(light.getPoint());
+
                     double dot = normal.getUnit().dot(lightVector.getUnit());
+
+                    dot = Math.abs(dot);
+
                     if (dot > 0) {
                         int colorLight = (int) Math.round(dot * 255);
                         color = Color.toRGB(colorLight, colorLight, colorLight);
+                    } else {
+                        color = Color.toRGB(0, 0, 0);
                     }
 
                     Line lightLine = new Line(light.getPoint(), lightVector);
-                    Vector lightDistance = new Vector(closest.getIntersection());
-                    lightDistance.subtract(light.getPoint());
                     boolean shadowed = false;
                     for (Shape shape : shapes) { // for all shapes
-                        if (shape.intersects(lightLine)) { // if intersects light line
+                        if (shape != closest && shape.intersects(lightLine)) { // if intersects light line
                             Vector shapeDistance = new Vector(shape.getIntersection());
                             shapeDistance.subtract(light.getPoint());
-                            if (shapeDistance.getMagnitude() < lightDistance.getMagnitude()) {
+                            if (shapeDistance.getMagnitude() < lightVector.getMagnitude()) {
                                 shadowed = true;
                             }
 
                         }
                     }
                     if (shadowed) {
-                        //cdcolor = Color.toRGB(0, 0, 0);
+                        color = Color.toRGB(0, 0, 0);
                     }
 
                 }

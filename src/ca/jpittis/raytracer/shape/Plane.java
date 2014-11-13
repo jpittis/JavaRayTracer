@@ -4,6 +4,8 @@ import ca.jpittis.raytracer.vector.Vector;
 
 public class Plane implements Shape {
 
+    //TODO finite planes
+
     private Vector point;
     private Vector normal;
 
@@ -17,7 +19,7 @@ public class Plane implements Shape {
     @Override
     public boolean intersects(Line line) {
 
-        if (line.getDirection().getUnit().dot(normal.getUnit()) == 1) {
+        if (line.getDirection().getUnit().dot(normal.getUnit()) == 0) {
             return false;
         }
 
@@ -32,6 +34,10 @@ public class Plane implements Shape {
         double t = numerator / denominator;
 
         intersection = solvePoint(t, line.getPoint(), line.getDirection());
+
+        if (intersection.isInfinite()) {
+            return false;
+        }
 
         return true;
     }

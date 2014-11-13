@@ -67,6 +67,13 @@ public class Vector {
         return thisVector.getMagnitude() < otherVector.getMagnitude();
     }
 
+    public boolean isInfinite() {
+        if (Math.abs(x) == Double.POSITIVE_INFINITY || Math.abs(y) == Double.POSITIVE_INFINITY || Math.abs(z) == Double.POSITIVE_INFINITY) {
+            return true;
+        }
+        return false;
+    }
+
     public double getX() {
         return x;
     }

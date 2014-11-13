@@ -47,4 +47,8 @@ public class Camera {
     public Line[][] getLines() {
         return lines;
     }
+
+    public Vector getPoint() {
+        return point;
+    }
 }
